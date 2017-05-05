@@ -54,6 +54,8 @@
             this.textBoxClientTerminator = new System.Windows.Forms.TextBox();
             this.buttonServerClearLog = new System.Windows.Forms.Button();
             this.buttonClientClearLog = new System.Windows.Forms.Button();
+            this.buttonServerCopyLog = new System.Windows.Forms.Button();
+            this.buttonClientCopyLog = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxServerIp
@@ -272,7 +274,7 @@
             // 
             // buttonServerClearLog
             // 
-            this.buttonServerClearLog.Location = new System.Drawing.Point(294, 486);
+            this.buttonServerClearLog.Location = new System.Drawing.Point(213, 486);
             this.buttonServerClearLog.Name = "buttonServerClearLog";
             this.buttonServerClearLog.Size = new System.Drawing.Size(75, 23);
             this.buttonServerClearLog.TabIndex = 24;
@@ -282,7 +284,7 @@
             // 
             // buttonClientClearLog
             // 
-            this.buttonClientClearLog.Location = new System.Drawing.Point(669, 486);
+            this.buttonClientClearLog.Location = new System.Drawing.Point(588, 486);
             this.buttonClientClearLog.Name = "buttonClientClearLog";
             this.buttonClientClearLog.Size = new System.Drawing.Size(75, 23);
             this.buttonClientClearLog.TabIndex = 25;
@@ -290,11 +292,33 @@
             this.buttonClientClearLog.UseVisualStyleBackColor = true;
             this.buttonClientClearLog.Click += new System.EventHandler(this.buttonClientClearLog_Click);
             // 
+            // buttonServerCopyLog
+            // 
+            this.buttonServerCopyLog.Location = new System.Drawing.Point(294, 486);
+            this.buttonServerCopyLog.Name = "buttonServerCopyLog";
+            this.buttonServerCopyLog.Size = new System.Drawing.Size(75, 23);
+            this.buttonServerCopyLog.TabIndex = 26;
+            this.buttonServerCopyLog.Text = "Copy";
+            this.buttonServerCopyLog.UseVisualStyleBackColor = true;
+            this.buttonServerCopyLog.Click += new System.EventHandler(this.buttonServerCopyLog_Click);
+            // 
+            // buttonClientCopyLog
+            // 
+            this.buttonClientCopyLog.Location = new System.Drawing.Point(669, 486);
+            this.buttonClientCopyLog.Name = "buttonClientCopyLog";
+            this.buttonClientCopyLog.Size = new System.Drawing.Size(75, 23);
+            this.buttonClientCopyLog.TabIndex = 27;
+            this.buttonClientCopyLog.Text = "Copy";
+            this.buttonClientCopyLog.UseVisualStyleBackColor = true;
+            this.buttonClientCopyLog.Click += new System.EventHandler(this.buttonClientCopyLog_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(756, 516);
+            this.Controls.Add(this.buttonClientCopyLog);
+            this.Controls.Add(this.buttonServerCopyLog);
             this.Controls.Add(this.buttonClientClearLog);
             this.Controls.Add(this.buttonServerClearLog);
             this.Controls.Add(this.labelClientEncoding);
@@ -358,6 +382,8 @@
         private System.Windows.Forms.TextBox textBoxClientTerminator;
         private System.Windows.Forms.Button buttonServerClearLog;
         private System.Windows.Forms.Button buttonClientClearLog;
+        private System.Windows.Forms.Button buttonServerCopyLog;
+        private System.Windows.Forms.Button buttonClientCopyLog;
     }
 }
 

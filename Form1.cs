@@ -191,6 +191,21 @@ namespace Stack4Demo
 
 
         /// <summary>
+        /// Copies server log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonServerCopyLog_Click(object sender, EventArgs e)
+        {
+            string msg = (string)listBoxServerLog.SelectedItem;
+            if (msg != null)
+            {
+                System.Windows.Forms.Clipboard.SetText(msg);
+            }
+        }
+
+
+        /// <summary>
         /// Connects a client
         /// </summary>
         /// <param name="sender"></param>
@@ -300,6 +315,21 @@ namespace Stack4Demo
         private void buttonClientClearLog_Click(object sender, EventArgs e)
         {
             listBoxClientLog.Items.Clear();
+        }
+
+
+        /// <summary>
+        /// Copy client log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonClientCopyLog_Click(object sender, EventArgs e)
+        {
+            string msg = (string)listBoxServerLog.SelectedItem;
+            if (msg != null)
+            {
+                System.Windows.Forms.Clipboard.SetText(msg);
+            }
         }
     }
 }
