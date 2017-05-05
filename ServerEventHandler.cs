@@ -14,6 +14,12 @@ namespace Stack4Demo
 
 
         /// <summary>
+        /// Encoding
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
+
+        /// <summary>
         /// Form 
         /// </summary>
         public Form1 Form { get; set; }
@@ -52,7 +58,7 @@ namespace Stack4Demo
         public void HandleReceivedData(IServerService senderObj, DataModel data)
         {
             // log received message 
-            string msg = Encoding.UTF8.GetString(data.Payload);
+            string msg = Encoding.GetString(data.Payload);
             Form.ServerLog(string.Format("A message '{0}' was received from client {1}.", msg, data.ClientId.Substring(0,5)));
 
             // disconnect client if exit received 
@@ -75,7 +81,7 @@ namespace Stack4Demo
             msg = new string(charArray);
 
             // send reversed
-            senderObj.SendToClient(data.ClientId, Encoding.UTF8.GetBytes(msg));
+            senderObj.SendToClient(data.ClientId, Encoding.GetBytes(msg));
         }
 
 
@@ -86,7 +92,7 @@ namespace Stack4Demo
         /// <param name="data"></param>
         public void HandleSentData(IServerService senderObj, DataModel data)
         {
-            string msg = Encoding.UTF8.GetString(data.Payload);
+            string msg = Encoding.GetString(data.Payload);
             Form.ServerLog(string.Format("A message '{0}' was sent to client {1}.", msg, data.ClientId.Substring(0,5)));
         }
 

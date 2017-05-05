@@ -1,6 +1,8 @@
 ﻿using Layer4Stack.DataProcessors;
 using Layer4Stack.Services;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
@@ -13,6 +15,7 @@ namespace Stack4Demo
     public partial class Form1 : Form
     {
 
+
         /// <summary>
         /// Init form
         /// </summary>
@@ -20,6 +23,31 @@ namespace Stack4Demo
         {
             InitializeComponent();
             _instance = this;
+
+            // set encodings to select boxes 
+            IDictionary<int, string> encodings = new Dictionary<int, string>();
+            int i = 0;
+            int defaultIndex = 0;
+            foreach (var encoding in Encoding.GetEncodings())
+            {
+                encodings.Add(encoding.CodePage, encoding.DisplayName);
+                if(encoding.CodePage == Encoding.ASCII.CodePage)
+                {
+                    defaultIndex = i;
+                }
+                i++;
+            }
+            comboBoxServerEncoding.DataSource = new BindingSource(encodings, null);
+            comboBoxServerEncoding.DisplayMember = "Value";
+            comboBoxServerEncoding.ValueMember = "Key";
+            comboBoxClientEncoding.DataSource = new BindingSource(encodings, null);
+            comboBoxClientEncoding.DisplayMember = "Value";
+            comboBoxClientEncoding.ValueMember = "Key";
+
+            // select ascii as defautl
+            comboBoxServerEncoding.SelectedIndex = defaultIndex;
+            comboBoxClientEncoding.SelectedIndex = defaultIndex;
+
         }
 
 
@@ -42,6 +70,18 @@ namespace Stack4Demo
 
 
         /// <summary>
+        /// Server encoding
+        /// </summary>
+        private Encoding _serverEncoding;
+
+
+        /// <summary>
+        /// Client encoding
+        /// </summary>
+        private Encoding _clientEncoding;
+
+
+        /// <summary>
         /// Starts the server
         /// </summary>
         /// <param name="sender"></param>
@@ -55,6 +95,10 @@ namespace Stack4Demo
                 return;
             }
 
+            // set encoding
+            int codePage = ((KeyValuePair<int, string>)comboBoxServerEncoding.SelectedItem).Key;
+            _serverEncoding = Encoding.GetEncoding(codePage);
+
             // setup server 
             _server = new TcpServerService
             {
@@ -66,13 +110,13 @@ namespace Stack4Demo
 
                 DataProcessorConfig = new MessageDataProcessorConfig
                 {
-                    // todo: get message terminator
-                    MessageTerminator = new byte[] { 13 }
-                },
+                    MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text))
+        },
 
                 EventHandler = new ServerEventHandler
                 {
-                    Form = this
+                    Form = this,
+                    Encoding = _serverEncoding
                 }
 
             };
@@ -136,6 +180,17 @@ namespace Stack4Demo
 
 
         /// <summary>
+        /// Clears server log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonServerClearLog_Click(object sender, EventArgs e)
+        {
+            listBoxServerLog.Items.Clear();
+        }
+
+
+        /// <summary>
         /// Connects a client
         /// </summary>
         /// <param name="sender"></param>
@@ -149,6 +204,10 @@ namespace Stack4Demo
                 return;
             }
 
+            // set encoding
+            int codePage = ((KeyValuePair<int, string>)comboBoxClientEncoding.SelectedItem).Key;
+            _clientEncoding = Encoding.GetEncoding(codePage);
+
             // setup client
             _client = new TcpClientService
             {
@@ -160,13 +219,13 @@ namespace Stack4Demo
 
                 DataProcessorConfig = new MessageDataProcessorConfig
                 {
-                    // todo: get message terminator
-                    MessageTerminator = new byte[] { 13 }
+                    MessageTerminator = _clientEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxClientTerminator.Text))
                 },
 
                 EventHandler = new ClientEventHandler
                 {
-                    Form = this
+                    Form = this,
+                    Encoding = _clientEncoding
                 }
 
             };
@@ -233,5 +292,14 @@ namespace Stack4Demo
         }
 
 
+        /// <summary>
+        /// Clears client log
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonClientClearLog_Click(object sender, EventArgs e)
+        {
+            listBoxClientLog.Items.Clear();
+        }
     }
 }

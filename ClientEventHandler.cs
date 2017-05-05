@@ -11,6 +11,11 @@ namespace Stack4Demo
     class ClientEventHandler : IClientEventHandler
     {
 
+        /// <summary>
+        /// Encoding
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
 
         /// <summary>
         /// Form 
@@ -58,7 +63,7 @@ namespace Stack4Demo
         /// <param name="data"></param>
         public void HandleReceivedData(IClientService senderObj, DataModel data)
         {
-            string msg = Encoding.UTF8.GetString(data.Payload);
+            string msg = Encoding.GetString(data.Payload);
             Form.ClientLog(string.Format("A message received from server is '{0}'.", msg));
         }
 
@@ -70,7 +75,7 @@ namespace Stack4Demo
         /// <param name="data"></param>
         public void HandleSentData(IClientService senderObj, DataModel data)
         {
-            string msg = Encoding.UTF8.GetString(data.Payload);
+            string msg = Encoding.GetString(data.Payload);
             Form.ClientLog(string.Format("A message sent to server is '{0}'.", msg));
         }
 
