@@ -1,6 +1,6 @@
-﻿using Layer4Stack.Handlers;
+﻿using Layer4Stack.Handlers.Interfaces;
 using Layer4Stack.Models;
-using Layer4Stack.Services;
+using Layer4Stack.Services.Interfaces;
 using System.Text;
 
 namespace Stack4Demo
@@ -28,7 +28,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientConnected(IClientService senderObj, ClientInfoModel info)
+        public void HandleClientConnected(IClientService senderObj, ClientInfo info)
         {
             Form.ClientLog(string.Format("Client connected to server {0} on port {1}.", info.IpAddress, info.Port));
         }
@@ -39,7 +39,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientConnectionFailure(IClientService senderObj, ClientInfoModel info)
+        public void HandleClientConnectionFailure(IClientService senderObj, ClientInfo info)
         {
             Form.ClientLog(string.Format("Client failed to connect to server {0} on port {1}.", info.IpAddress, info.Port));
         }
@@ -50,7 +50,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientDisconnected(IClientService senderObj, ClientInfoModel info)
+        public void HandleClientDisconnected(IClientService senderObj, ClientInfo info)
         {
             Form.ClientLog(string.Format("Client disconnected from server {0} on port {1}.", info.IpAddress, info.Port));
         }
@@ -61,7 +61,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleReceivedData(IClientService senderObj, DataModel data)
+        public void HandleReceivedData(IClientService senderObj, DataContainer data)
         {
             string msg = Encoding.GetString(data.Payload);
             Form.ClientLog(string.Format("A message received from server is '{0}'.", msg));
@@ -73,7 +73,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleSentData(IClientService senderObj, DataModel data)
+        public void HandleSentData(IClientService senderObj, DataContainer data)
         {
             string msg = Encoding.GetString(data.Payload);
             Form.ClientLog(string.Format("A message sent to server is '{0}'.", msg));

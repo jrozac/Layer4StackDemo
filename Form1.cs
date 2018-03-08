@@ -1,4 +1,6 @@
 ﻿using Layer4Stack.DataProcessors;
+using Layer4Stack.DataProcessors.Interfaces;
+using Layer4Stack.Models;
 using Layer4Stack.Services;
 using System;
 using System.Collections;
@@ -99,28 +101,26 @@ namespace Stack4Demo
             int codePage = ((KeyValuePair<int, string>)comboBoxServerEncoding.SelectedItem).Key;
             _serverEncoding = Encoding.GetEncoding(codePage);
 
+            IDataProcessorProvider dataProcessorProvider = new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(new MessageDataProcessorConfig() {
+                MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text)),
+                UseLengthHeader = false
+            });
+
             // setup server 
-            _server = new TcpServerService
-            {
-                ServerConfig = new Layer4Stack.Models.ServerConfigModel
+            _server = new TcpServerService(new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(
+                new MessageDataProcessorConfig()
                 {
-                    IpAddress = textBoxServerIp.Text,
-                    Port = int.Parse(textBoxServerPort.Text)
-                },
-
-                DataProcessorConfig = new MessageDataProcessorConfig
-                {
-                    MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text))
-        },
-
-                EventHandler = new ServerEventHandler
-                {
-                    Form = this,
-                    Encoding = _serverEncoding
+                    MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text)),
+                    UseLengthHeader = checkBoxServerUseLengthHeader.Checked
                 }
-
-            };
-
+            ), new ServerEventHandler() {
+                Form = this,
+                Encoding = _serverEncoding
+            }, new ServerConfig() {
+                IpAddress = textBoxServerIp.Text,
+                Port = int.Parse(textBoxServerPort.Text)
+            });
+            
             // start server
             _server.Start();
 
@@ -223,27 +223,22 @@ namespace Stack4Demo
             int codePage = ((KeyValuePair<int, string>)comboBoxClientEncoding.SelectedItem).Key;
             _clientEncoding = Encoding.GetEncoding(codePage);
 
-            // setup client
-            _client = new TcpClientService
-            {
-                ClientConfig = new Layer4Stack.Models.ClientConfigModel
+            // setup client  
+            _client = new TcpClientService(new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(
+                new MessageDataProcessorConfig()
                 {
-                    IpAddress = textBoxClientIp.Text,
-                    Port = int.Parse(textBoxClientPort.Text)
-                },
-
-                DataProcessorConfig = new MessageDataProcessorConfig
-                {
-                    MessageTerminator = _clientEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxClientTerminator.Text))
-                },
-
-                EventHandler = new ClientEventHandler
-                {
-                    Form = this,
-                    Encoding = _clientEncoding
+                    MessageTerminator = _clientEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxClientTerminator.Text)),
+                    UseLengthHeader = checkBoxClientUseLengthHeader.Checked
                 }
-
-            };
+            ), new ClientEventHandler()
+            {
+                Form = this,
+                Encoding = _clientEncoding
+            }, new ClientConfig()
+            {
+                IpAddress = textBoxClientIp.Text,
+                Port = int.Parse(textBoxServerPort.Text)
+            });
 
             // connect
             _client.Connect();

@@ -56,6 +56,8 @@
             this.buttonClientClearLog = new System.Windows.Forms.Button();
             this.buttonServerCopyLog = new System.Windows.Forms.Button();
             this.buttonClientCopyLog = new System.Windows.Forms.Button();
+            this.checkBoxServerUseLengthHeader = new System.Windows.Forms.CheckBox();
+            this.checkBoxClientUseLengthHeader = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBoxServerIp
@@ -204,7 +206,7 @@
             // 
             // textBoxServerTerminator
             // 
-            this.textBoxServerTerminator.Location = new System.Drawing.Point(12, 89);
+            this.textBoxServerTerminator.Location = new System.Drawing.Point(12, 73);
             this.textBoxServerTerminator.Name = "textBoxServerTerminator";
             this.textBoxServerTerminator.Size = new System.Drawing.Size(137, 22);
             this.textBoxServerTerminator.TabIndex = 16;
@@ -214,7 +216,7 @@
             // 
             this.comboBoxServerEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxServerEncoding.FormattingEnabled = true;
-            this.comboBoxServerEncoding.Location = new System.Drawing.Point(155, 89);
+            this.comboBoxServerEncoding.Location = new System.Drawing.Point(155, 73);
             this.comboBoxServerEncoding.Name = "comboBoxServerEncoding";
             this.comboBoxServerEncoding.Size = new System.Drawing.Size(214, 24);
             this.comboBoxServerEncoding.TabIndex = 17;
@@ -222,7 +224,7 @@
             // labelServerTerminator
             // 
             this.labelServerTerminator.AutoSize = true;
-            this.labelServerTerminator.Location = new System.Drawing.Point(9, 69);
+            this.labelServerTerminator.Location = new System.Drawing.Point(9, 53);
             this.labelServerTerminator.Name = "labelServerTerminator";
             this.labelServerTerminator.Size = new System.Drawing.Size(77, 17);
             this.labelServerTerminator.TabIndex = 18;
@@ -231,7 +233,7 @@
             // labelServerEncoding
             // 
             this.labelServerEncoding.AutoSize = true;
-            this.labelServerEncoding.Location = new System.Drawing.Point(152, 69);
+            this.labelServerEncoding.Location = new System.Drawing.Point(152, 53);
             this.labelServerEncoding.Name = "labelServerEncoding";
             this.labelServerEncoding.Size = new System.Drawing.Size(67, 17);
             this.labelServerEncoding.TabIndex = 19;
@@ -240,7 +242,7 @@
             // labelClientEncoding
             // 
             this.labelClientEncoding.AutoSize = true;
-            this.labelClientEncoding.Location = new System.Drawing.Point(527, 69);
+            this.labelClientEncoding.Location = new System.Drawing.Point(527, 53);
             this.labelClientEncoding.Name = "labelClientEncoding";
             this.labelClientEncoding.Size = new System.Drawing.Size(67, 17);
             this.labelClientEncoding.TabIndex = 23;
@@ -249,7 +251,7 @@
             // labelClientTerminator
             // 
             this.labelClientTerminator.AutoSize = true;
-            this.labelClientTerminator.Location = new System.Drawing.Point(384, 69);
+            this.labelClientTerminator.Location = new System.Drawing.Point(384, 53);
             this.labelClientTerminator.Name = "labelClientTerminator";
             this.labelClientTerminator.Size = new System.Drawing.Size(77, 17);
             this.labelClientTerminator.TabIndex = 22;
@@ -259,14 +261,14 @@
             // 
             this.comboBoxClientEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxClientEncoding.FormattingEnabled = true;
-            this.comboBoxClientEncoding.Location = new System.Drawing.Point(530, 89);
+            this.comboBoxClientEncoding.Location = new System.Drawing.Point(530, 73);
             this.comboBoxClientEncoding.Name = "comboBoxClientEncoding";
             this.comboBoxClientEncoding.Size = new System.Drawing.Size(214, 24);
             this.comboBoxClientEncoding.TabIndex = 21;
             // 
             // textBoxClientTerminator
             // 
-            this.textBoxClientTerminator.Location = new System.Drawing.Point(387, 89);
+            this.textBoxClientTerminator.Location = new System.Drawing.Point(387, 73);
             this.textBoxClientTerminator.Name = "textBoxClientTerminator";
             this.textBoxClientTerminator.Size = new System.Drawing.Size(137, 22);
             this.textBoxClientTerminator.TabIndex = 20;
@@ -312,11 +314,33 @@
             this.buttonClientCopyLog.UseVisualStyleBackColor = true;
             this.buttonClientCopyLog.Click += new System.EventHandler(this.buttonClientCopyLog_Click);
             // 
+            // checkBoxServerUseLengthHeader
+            // 
+            this.checkBoxServerUseLengthHeader.AutoSize = true;
+            this.checkBoxServerUseLengthHeader.Location = new System.Drawing.Point(12, 102);
+            this.checkBoxServerUseLengthHeader.Name = "checkBoxServerUseLengthHeader";
+            this.checkBoxServerUseLengthHeader.Size = new System.Drawing.Size(147, 21);
+            this.checkBoxServerUseLengthHeader.TabIndex = 28;
+            this.checkBoxServerUseLengthHeader.Text = "Use length header";
+            this.checkBoxServerUseLengthHeader.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxClientUseLengthHeader
+            // 
+            this.checkBoxClientUseLengthHeader.AutoSize = true;
+            this.checkBoxClientUseLengthHeader.Location = new System.Drawing.Point(387, 102);
+            this.checkBoxClientUseLengthHeader.Name = "checkBoxClientUseLengthHeader";
+            this.checkBoxClientUseLengthHeader.Size = new System.Drawing.Size(147, 21);
+            this.checkBoxClientUseLengthHeader.TabIndex = 29;
+            this.checkBoxClientUseLengthHeader.Text = "Use length header";
+            this.checkBoxClientUseLengthHeader.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(756, 516);
+            this.Controls.Add(this.checkBoxClientUseLengthHeader);
+            this.Controls.Add(this.checkBoxServerUseLengthHeader);
             this.Controls.Add(this.buttonClientCopyLog);
             this.Controls.Add(this.buttonServerCopyLog);
             this.Controls.Add(this.buttonClientClearLog);
@@ -384,6 +408,8 @@
         private System.Windows.Forms.Button buttonClientClearLog;
         private System.Windows.Forms.Button buttonServerCopyLog;
         private System.Windows.Forms.Button buttonClientCopyLog;
+        private System.Windows.Forms.CheckBox checkBoxServerUseLengthHeader;
+        private System.Windows.Forms.CheckBox checkBoxClientUseLengthHeader;
     }
 }
 

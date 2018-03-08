@@ -1,6 +1,6 @@
-﻿using Layer4Stack.Handlers;
+﻿using Layer4Stack.Handlers.Interfaces;
 using Layer4Stack.Models;
-using Layer4Stack.Services;
+using Layer4Stack.Services.Interfaces;
 using System;
 using System.Text;
 
@@ -30,7 +30,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientConnected(IServerService senderObj, ClientInfoModel info)
+        public void HandleClientConnected(IServerService senderObj, ClientInfo info)
         {
             Form.ServerLog(string.Format("Client {0} with IP {1} connected on port {2}.", info.Id.Substring(0,5), info.IpAddress, info.Port));
         }
@@ -41,7 +41,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientDisconnected(IServerService senderObj, ClientInfoModel info)
+        public void HandleClientDisconnected(IServerService senderObj, ClientInfo info)
         {
             Form.ServerLog(string.Format("Client {0} with IP {1} disconnected on port {2}.", info.Id.Substring(0, 5), info.IpAddress, info.Port));
         }
@@ -55,7 +55,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleReceivedData(IServerService senderObj, DataModel data)
+        public void HandleReceivedData(IServerService senderObj, DataContainer data)
         {
             // log received message 
             string msg = Encoding.GetString(data.Payload);
@@ -90,7 +90,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleSentData(IServerService senderObj, DataModel data)
+        public void HandleSentData(IServerService senderObj, DataContainer data)
         {
             string msg = Encoding.GetString(data.Payload);
             Form.ServerLog(string.Format("A message '{0}' was sent to client {1}.", msg, data.ClientId.Substring(0,5)));
@@ -102,7 +102,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="config"></param>
-        public void HandleServerStarted(IServerService senderObj, ServerConfigModel config)
+        public void HandleServerStarted(IServerService senderObj, ServerConfig config)
         {
             Form.ServerLog("Server started.");
         }
@@ -113,7 +113,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="config"></param>
-        public void HandleServerStartFailure(IServerService senderObj, ServerConfigModel config)
+        public void HandleServerStartFailure(IServerService senderObj, ServerConfig config)
         {
             Form.ServerLog("Server failed to start.");
         }
@@ -124,7 +124,7 @@ namespace Stack4Demo
         /// </summary>
         /// <param name="senderObj"></param>
         /// <param name="config"></param>
-        public void HandleServerStopped(IServerService senderObj, ServerConfigModel config)
+        public void HandleServerStopped(IServerService senderObj, ServerConfig config)
         {
             Form.ServerLog("Server stopped.");
         }
