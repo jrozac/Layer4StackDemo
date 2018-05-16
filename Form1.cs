@@ -101,6 +101,7 @@ namespace Stack4Demo
             int codePage = ((KeyValuePair<int, string>)comboBoxServerEncoding.SelectedItem).Key;
             _serverEncoding = Encoding.GetEncoding(codePage);
 
+            // set data processor provider
             IDataProcessorProvider dataProcessorProvider = new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(new MessageDataProcessorConfig() {
                 MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text)),
                 UseLengthHeader = false
@@ -151,10 +152,10 @@ namespace Stack4Demo
         {
             if(_server != null)
             {
-                string msg = textBoxServerMessage.Text.Trim();
+                string msg = textBoxServerMessage.Text;
                 if(!string.IsNullOrWhiteSpace(msg))
                 {
-                    _server.SendToAll(Encoding.UTF8.GetBytes(msg));
+                    _server.SendToAll(_serverEncoding.GetBytes(msg));
                 }
             }
         }
@@ -273,10 +274,10 @@ namespace Stack4Demo
 
             if (_client != null)
             {
-                string msg = textBoxClientMessage.Text.Trim();
+                string msg = textBoxClientMessage.Text;
                 if (!string.IsNullOrWhiteSpace(msg))
                 {
-                    _client.Send(Encoding.UTF8.GetBytes(msg));
+                    _client.Send(_clientEncoding.GetBytes(msg));
                 }
             }
 
@@ -320,7 +321,7 @@ namespace Stack4Demo
         /// <param name="e"></param>
         private void buttonClientCopyLog_Click(object sender, EventArgs e)
         {
-            string msg = (string)listBoxServerLog.SelectedItem;
+            string msg = (string)listBoxClientLog.SelectedItem;
             if (msg != null)
             {
                 System.Windows.Forms.Clipboard.SetText(msg);

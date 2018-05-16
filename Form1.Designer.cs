@@ -210,7 +210,7 @@
             this.textBoxServerTerminator.Name = "textBoxServerTerminator";
             this.textBoxServerTerminator.Size = new System.Drawing.Size(137, 22);
             this.textBoxServerTerminator.TabIndex = 16;
-            this.textBoxServerTerminator.Text = "\\r\\n";
+            this.textBoxServerTerminator.Text = "\\x03";
             // 
             // comboBoxServerEncoding
             // 
@@ -272,7 +272,7 @@
             this.textBoxClientTerminator.Name = "textBoxClientTerminator";
             this.textBoxClientTerminator.Size = new System.Drawing.Size(137, 22);
             this.textBoxClientTerminator.TabIndex = 20;
-            this.textBoxClientTerminator.Text = "\\r\\n";
+            this.textBoxClientTerminator.Text = "\\x03";
             // 
             // buttonServerClearLog
             // 
@@ -317,6 +317,8 @@
             // checkBoxServerUseLengthHeader
             // 
             this.checkBoxServerUseLengthHeader.AutoSize = true;
+            this.checkBoxServerUseLengthHeader.Checked = true;
+            this.checkBoxServerUseLengthHeader.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxServerUseLengthHeader.Location = new System.Drawing.Point(12, 102);
             this.checkBoxServerUseLengthHeader.Name = "checkBoxServerUseLengthHeader";
             this.checkBoxServerUseLengthHeader.Size = new System.Drawing.Size(147, 21);
@@ -327,6 +329,8 @@
             // checkBoxClientUseLengthHeader
             // 
             this.checkBoxClientUseLengthHeader.AutoSize = true;
+            this.checkBoxClientUseLengthHeader.Checked = true;
+            this.checkBoxClientUseLengthHeader.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxClientUseLengthHeader.Location = new System.Drawing.Point(387, 102);
             this.checkBoxClientUseLengthHeader.Name = "checkBoxClientUseLengthHeader";
             this.checkBoxClientUseLengthHeader.Size = new System.Drawing.Size(147, 21);
