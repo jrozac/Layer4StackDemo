@@ -3,7 +3,6 @@ using Layer4Stack.DataProcessors.Interfaces;
 using Layer4Stack.Models;
 using Layer4Stack.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -238,7 +237,7 @@ namespace Stack4Demo
             }, new ClientConfig()
             {
                 IpAddress = textBoxClientIp.Text,
-                Port = int.Parse(textBoxServerPort.Text)
+                Port = int.Parse(textBoxClientPort.Text)
             });
 
             // connect
