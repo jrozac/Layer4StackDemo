@@ -1,6 +1,5 @@
-﻿using Layer4Stack.Handlers.Interfaces;
+﻿using Layer4Stack.Handlers;
 using Layer4Stack.Models;
-using Layer4Stack.Services.Interfaces;
 using System.Text;
 
 namespace Stack4Demo
@@ -8,75 +7,76 @@ namespace Stack4Demo
     /// <summary>
     /// Client event handler
     /// </summary>
-    class ClientEventHandler : IClientEventHandler
+    public class ClientEventHandler : IClientEventHandler
     {
 
         /// <summary>
         /// Encoding
         /// </summary>
-        public Encoding Encoding { get; set; }
-
+        private readonly Encoding _encoding;
 
         /// <summary>
         /// Form 
         /// </summary>
-        public Form1 Form { get; set; }
+        private readonly Form1 _form;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="form"></param>
+        public ClientEventHandler(Form1 form)
+        {
+            _form = form;
+            _encoding = form.ClientEncoding;
+        }
 
         /// <summary>
         /// Client connected to server
         /// </summary>
-        /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientConnected(IClientService senderObj, ClientInfo info)
+        public void HandleClientConnected(ClientInfo info)
         {
-            Form.ClientLog(string.Format("Client connected to server {0} on port {1}.", info.IpAddress, info.Port));
+            _form.ClientLog(string.Format("Client connected to server {0} on port {1}.", info.IpAddress, info.Port));
         }
-
 
         /// <summary>
         /// Client failed to connect to server
         /// </summary>
-        /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientConnectionFailure(IClientService senderObj, ClientInfo info)
+        public void HandleClientConnectionFailure(ClientInfo info)
         {
-            Form.ClientLog(string.Format("Client failed to connect to server {0} on port {1}.", info.IpAddress, info.Port));
+            _form.ClientLog(string.Format("Client failed to connect to server {0} on port {1}.", info.IpAddress, info.Port));
         }
-
 
         /// <summary>
         /// Client disconnected from server.
         /// </summary>
-        /// <param name="senderObj"></param>
         /// <param name="info"></param>
-        public void HandleClientDisconnected(IClientService senderObj, ClientInfo info)
+        public void HandleClientDisconnected(ClientInfo info)
         {
-            Form.ClientLog(string.Format("Client disconnected from server {0} on port {1}.", info.IpAddress, info.Port));
+            _form.ClientLog(string.Format("Client disconnected from server {0} on port {1}.", info.IpAddress, info.Port));
         }
-
 
         /// <summary>
         /// Data received handler. Fired after processed by DataProcessor.
         /// </summary>
-        /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleReceivedData(IClientService senderObj, DataContainer data)
+        /// <returns></returns>
+        public byte[] HandleReceivedData(DataContainer data, bool rpcResponse = false)
         {
-            string msg = Encoding.GetString(data.Payload);
-            Form.ClientLog(string.Format("A message received from server is '{0}'.", msg));
+            string msg = _encoding.GetString(data.Payload);
+            _form.ClientLog(string.Format("A message received from server is '{0}'.", msg));
+            return null;
         }
-
 
         /// <summary>
         /// Data sent handler.Fired after processed by DataProcessor.
         /// </summary>
-        /// <param name="senderObj"></param>
         /// <param name="data"></param>
-        public void HandleSentData(IClientService senderObj, DataContainer data)
+        public void HandleSentData(DataContainer data)
         {
-            string msg = Encoding.GetString(data.Payload);
-            Form.ClientLog(string.Format("A message sent to server is '{0}'.", msg));
+            string msg = _encoding.GetString(data.Payload);
+            _form.ClientLog(string.Format("A message sent to server is '{0}'.", msg));
         }
 
     }

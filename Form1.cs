@@ -1,7 +1,5 @@
-﻿using Layer4Stack.DataProcessors;
-using Layer4Stack.DataProcessors.Interfaces;
-using Layer4Stack.Models;
-using Layer4Stack.Services;
+﻿using Layer4Stack.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,14 +14,74 @@ namespace Stack4Demo
     public partial class Form1 : Form
     {
 
+        /// <summary>
+        /// Service provider
+        /// </summary>
+        private readonly IServiceProvider _provider;
 
         /// <summary>
-        /// Init form
+        /// Server instance
         /// </summary>
-        public Form1()
+        public TcpServerService Server { get; private set; }
+
+        /// <summary>
+        /// Client instance
+        /// </summary>
+        private TcpClientService _client;
+
+        /// <summary>
+        /// Client encoding
+        /// </summary>
+        public Encoding ClientEncoding { get; private set; }
+
+        /// <summary>
+        /// Server port
+        /// </summary>
+        public int ServerPort  => int.Parse(textBoxServerPort.Text);
+
+        /// <summary>
+        /// Server use length header
+        /// </summary>
+        public bool ServerUseLengthHeader => checkBoxServerUseLengthHeader.Checked;
+
+        /// <summary>
+        /// Server message terminator
+        /// </summary>
+        public byte[] ServerMsgTerminator =>ServerEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text));
+
+        /// <summary>
+        /// Client host 
+        /// </summary>
+        public string ClientHost => textBoxClientIp.Text;
+
+        /// <summary>
+        /// Client posrt 
+        /// </summary>
+        public int ClientPort => int.Parse(textBoxClientPort.Text);
+
+        /// <summary>
+        /// Client use length header
+        /// </summary>
+        public bool ClientUseLengthHeader => checkBoxClientUseLengthHeader.Checked;
+
+        /// <summary>
+        /// Client message terminator
+        /// </summary>
+        public byte[] ClientMsgTerminator => ClientEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxClientTerminator.Text));
+
+        /// <summary>
+        /// Server encoding
+        /// </summary>
+        public Encoding ServerEncoding { get; private set; }
+
+        /// <summary>
+        /// Constructor with provider
+        /// </summary>
+        /// <param name="provider"></param>
+        public Form1(IServiceProvider provider)
         {
+            _provider = provider;
             InitializeComponent();
-            _instance = this;
 
             // set encodings to select boxes 
             IDictionary<int, string> encodings = new Dictionary<int, string>();
@@ -51,37 +109,6 @@ namespace Stack4Demo
 
         }
 
-
-        /// <summary>
-        /// Form instance 
-        /// </summary>
-        private static Form1 _instance;
-
-
-        /// <summary>
-        /// Server instance
-        /// </summary>
-        private TcpServerService _server;
-
-        
-        /// <summary>
-        /// Client instance
-        /// </summary>
-        private TcpClientService _client;
-
-
-        /// <summary>
-        /// Server encoding
-        /// </summary>
-        private Encoding _serverEncoding;
-
-
-        /// <summary>
-        /// Client encoding
-        /// </summary>
-        private Encoding _clientEncoding;
-
-
         /// <summary>
         /// Starts the server
         /// </summary>
@@ -91,41 +118,30 @@ namespace Stack4Demo
         {
 
             // already running
-            if(_server != null)
+            if(Server != null)
             {
+                return;
+            }
+
+            // check port numeric
+            int port;
+            if(!int.TryParse(textBoxServerPort.Text, out port))
+            {
+                MessageBox.Show("Port must be numeric.", "Configuration error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
             // set encoding
             int codePage = ((KeyValuePair<int, string>)comboBoxServerEncoding.SelectedItem).Key;
-            _serverEncoding = Encoding.GetEncoding(codePage);
+            ServerEncoding = Encoding.GetEncoding(codePage);
 
-            // set data processor provider
-            IDataProcessorProvider dataProcessorProvider = new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(new MessageDataProcessorConfig() {
-                MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text)),
-                UseLengthHeader = false
-            });
-
-            // setup server 
-            _server = new TcpServerService(new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(
-                new MessageDataProcessorConfig()
-                {
-                    MessageTerminator = _serverEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxServerTerminator.Text)),
-                    UseLengthHeader = checkBoxServerUseLengthHeader.Checked
-                }
-            ), new ServerEventHandler() {
-                Form = this,
-                Encoding = _serverEncoding
-            }, new ServerConfig() {
-                IpAddress = textBoxServerIp.Text,
-                Port = int.Parse(textBoxServerPort.Text)
-            });
+            // create server 
+            Server = _provider.GetService<TcpServerService>();
             
             // start server
-            _server.Start();
+            Server.StartAsync();
 
         }
-
 
         /// <summary>
         /// Stops server
@@ -134,13 +150,12 @@ namespace Stack4Demo
         /// <param name="e"></param>
         private void buttonServerStop_Click(object sender, EventArgs e)
         {
-            if (_server != null)
+            if (Server != null)
             {
-                _server.Stop();
-                _server = null;
+                Server.Stop();
+                Server = null;
             }
         }
-
 
         /// <summary>
         /// Sends a message to all clients
@@ -149,16 +164,15 @@ namespace Stack4Demo
         /// <param name="e"></param>
         private void buttonServerSendMessage_Click(object sender, EventArgs e)
         {
-            if(_server != null)
+            if(Server != null)
             {
                 string msg = textBoxServerMessage.Text;
                 if(!string.IsNullOrWhiteSpace(msg))
                 {
-                    _server.SendToAll(_serverEncoding.GetBytes(msg));
+                    Server.SendToAllAsync(ServerEncoding.GetBytes(msg));
                 }
             }
         }
-
 
         /// <summary>
         /// Adds a server log item. 
@@ -178,7 +192,6 @@ namespace Stack4Demo
             catch (InvalidOperationException) { }
         }
 
-
         /// <summary>
         /// Clears server log
         /// </summary>
@@ -188,7 +201,6 @@ namespace Stack4Demo
         {
             listBoxServerLog.Items.Clear();
         }
-
 
         /// <summary>
         /// Copies server log
@@ -204,7 +216,6 @@ namespace Stack4Demo
             }
         }
 
-
         /// <summary>
         /// Connects a client
         /// </summary>
@@ -219,32 +230,25 @@ namespace Stack4Demo
                 return;
             }
 
+            // check port numeric
+            int port;
+            if (!int.TryParse(textBoxClientPort.Text, out port))
+            {
+                MessageBox.Show("Port must be numeric.", "Configuration error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             // set encoding
             int codePage = ((KeyValuePair<int, string>)comboBoxClientEncoding.SelectedItem).Key;
-            _clientEncoding = Encoding.GetEncoding(codePage);
+            ClientEncoding = Encoding.GetEncoding(codePage);
 
             // setup client  
-            _client = new TcpClientService(new DataProcessorProvider<MessageDataProcessor, MessageDataProcessorConfig>(
-                new MessageDataProcessorConfig()
-                {
-                    MessageTerminator = _clientEncoding.GetBytes(System.Text.RegularExpressions.Regex.Unescape(textBoxClientTerminator.Text)),
-                    UseLengthHeader = checkBoxClientUseLengthHeader.Checked
-                }
-            ), new ClientEventHandler()
-            {
-                Form = this,
-                Encoding = _clientEncoding
-            }, new ClientConfig()
-            {
-                IpAddress = textBoxClientIp.Text,
-                Port = int.Parse(textBoxClientPort.Text)
-            });
+            _client = _provider.GetService<TcpClientService>();
 
             // connect
-            _client.Connect();
+            _client.ConnectAsync();
 
         }
-
 
         /// <summary>
         /// Disconnects a client
@@ -262,7 +266,6 @@ namespace Stack4Demo
 
         }
 
-
         /// <summary>
         /// Sends a message to the server
         /// </summary>
@@ -276,12 +279,11 @@ namespace Stack4Demo
                 string msg = textBoxClientMessage.Text;
                 if (!string.IsNullOrWhiteSpace(msg))
                 {
-                    _client.Send(_clientEncoding.GetBytes(msg));
+                    _client.SendAsync(ClientEncoding.GetBytes(msg));
                 }
             }
 
         }
-
 
         /// <summary>
         /// Adds a client log item. 
@@ -301,7 +303,6 @@ namespace Stack4Demo
             catch (InvalidOperationException) { }
         }
 
-
         /// <summary>
         /// Clears client log
         /// </summary>
@@ -311,7 +312,6 @@ namespace Stack4Demo
         {
             listBoxClientLog.Items.Clear();
         }
-
 
         /// <summary>
         /// Copy client log

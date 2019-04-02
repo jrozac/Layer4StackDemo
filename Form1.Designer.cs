@@ -62,11 +62,12 @@
             // 
             // textBoxServerIp
             // 
+            this.textBoxServerIp.Enabled = false;
             this.textBoxServerIp.Location = new System.Drawing.Point(12, 135);
             this.textBoxServerIp.Name = "textBoxServerIp";
             this.textBoxServerIp.Size = new System.Drawing.Size(137, 22);
             this.textBoxServerIp.TabIndex = 1;
-            this.textBoxServerIp.Text = "127.0.0.1";
+            this.textBoxServerIp.Text = "0.0.0.0";
             // 
             // textBoxServerPort
             // 
